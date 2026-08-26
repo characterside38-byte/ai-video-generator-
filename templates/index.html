@@ -1,1 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Animation Story Generator</title>
+</head>
+<body style="font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px;">
+    <h2>AI Video Generator</h2>
+    <textarea id="story" placeholder="Apni story likho yahan..." style="width: 100%; height: 100px;"></textarea><br><br>
+    
+    <label>Choose Style:</label>
+    <select id="style" style="width: 100%; padding: 8px;">
+        <option value="3d_pixar">3D Animation (Pixar/Disney Style)</option>
+        <option value="anime">Anime (Japanese Aesthetic)</option>
+        <option value="yarn">Yarn / Claymation (Wool Craft)</option>
+        <option value="2d_cartoon">2D Cartoon Style</option>
+    </select><br><br>
+
+    <button onclick="createVideo()" style="width: 100%; padding: 12px; background: black; color: white; border: none; cursor: pointer;">Generate Video</button>
+
+    <div id="result" style="margin-top: 20px;"></div>
+
+    <script>
+        async function createVideo() {
+            document.getElementById('result').innerText = "Video generate ho raha hai, thoda wait karein...";
+            let story = document.getElementById('story').value;
+            let style = document.getElementById('style').value;
+
+            let res = await fetch('/generate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({story, style})
+            });
+            let data = await res.json();
+            if(data.status === 'success') {
+                document.getElementById('result').innerHTML = `<video width="100%" controls src="${data.video_url}"></video>`;
+            }
+        }
+    </script>
+</body>
+</html>
 
